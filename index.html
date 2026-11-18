@@ -1,0 +1,1071 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>하찮은 마니또</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@300;400;700&display=swap">
+<style>
+  /* 레이아웃: 모바일 우선 단일 컬럼(최대 460px). 봉투 카드가 화면의 주인공. */
+  :root {
+    --bg: #F2F0F7;
+    --surface: #FFFFFF;
+    --surface-2: #F8F6FB;
+    --fg: #221D2F;
+    --muted: #595068;
+    --line: #DCD7E8;
+    --accent: #7E5718;
+    --on-accent: #FFFFFF;
+    --accent-soft: #F3E6CA;
+    --rose: #9E3D58;
+    --ok: #2C6343;
+    --env: #2B2443;
+    --env-2: #352C52;
+    --chip-fg: #241E32;
+    --shadow: 0 1px 2px rgba(35, 30, 49, .06), 0 12px 32px -14px rgba(35, 30, 49, .26);
+
+    --f-display: "Jua", "Gaegu", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --f-body: "Gaegu", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141120;
+      --surface: #1D192B;
+      --surface-2: #241F35;
+      --fg: #EFEBF8;
+      --muted: #ADA4C2;
+      --line: #342D4A;
+      --accent: #EDC978;
+      --on-accent: #1B1526;
+      --accent-soft: #3A2F1C;
+      --rose: #F0A0B6;
+      --ok: #8FD6A9;
+      --env: #2E2748;
+      --env-2: #3A3159;
+      --chip-fg: #241E32;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 14px 36px -16px rgba(0, 0, 0, .8);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141120;
+    --surface: #1D192B;
+    --surface-2: #241F35;
+    --fg: #EFEBF8;
+    --muted: #ADA4C2;
+    --line: #342D4A;
+    --accent: #EDC978;
+    --on-accent: #1B1526;
+    --accent-soft: #3A2F1C;
+    --rose: #F0A0B6;
+    --ok: #8FD6A9;
+    --env: #2E2748;
+    --env-2: #3A3159;
+    --chip-fg: #241E32;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 14px 36px -16px rgba(0, 0, 0, .8);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--f-body);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body.locked { overflow: hidden; }
+  .wrap {
+    max-width: 460px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 28px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  header { display: flex; flex-direction: column; gap: 10px; }
+  .eyebrow { font-size: 15px; letter-spacing: .12em; color: var(--accent); font-weight: 700; }
+  h1 {
+    font-family: var(--f-display); font-weight: 400;
+    font-size: clamp(35px, 10.4vw, 45px); line-height: 1.2;
+    margin: 0; text-wrap: balance; letter-spacing: .01em;
+    transform: rotate(-1.4deg); transform-origin: left center;
+  }
+  .sub { margin: 0; color: var(--muted); font-size: 16px; }
+
+  .card {
+    background: var(--surface); border: 1.5px solid var(--line);
+    border-radius: 20px 26px 18px 24px; padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .card h2 {
+    font-family: var(--f-display); font-size: 22px; font-weight: 400;
+    margin: 0; letter-spacing: .01em; line-height: 1.3;
+  }
+  .card h3 {
+    font-family: var(--f-display); font-size: 19px; font-weight: 400;
+    margin: 6px 0 0; letter-spacing: .01em;
+  }
+  .card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+
+  button {
+    font-family: inherit; font-size: 16.5px; font-weight: 700;
+    border-radius: 13px 10px 14px 11px; border: 1.5px solid var(--line);
+    background: var(--surface-2); color: var(--fg);
+    padding: 12px 16px; cursor: pointer;
+    transition: transform .12s ease, background .15s ease, border-color .15s ease;
+  }
+  button:hover:not(:disabled) { border-color: var(--muted); }
+  button:active:not(:disabled) { transform: translateY(1px); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .ghost { background: transparent; }
+  .danger { color: var(--rose); }
+  .wide { width: 100%; }
+
+  textarea {
+    font-family: inherit; font-size: 17px; font-weight: 700; line-height: 1.9;
+    padding: 12px 14px; border-radius: 13px 10px 14px 11px;
+    border: 1.5px solid var(--line); background: var(--surface-2); color: var(--fg);
+    width: 100%; min-height: 230px; resize: vertical;
+  }
+  textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  /* 캐릭터 칩 */
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 13px 6px 7px; border-radius: 999px;
+    background: var(--chip-bg, #E6E2EE); color: var(--chip-fg);
+    font-size: 16.5px; font-weight: 700;
+    border: 1.5px solid rgba(0, 0, 0, .12);
+  }
+  .chip .mark {
+    width: 26px; height: 26px; border-radius: 50%; overflow: hidden;
+    background: rgba(255, 255, 255, .8);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--f-display); font-size: 14px; font-weight: 400;
+    flex: none;
+  }
+  .chip .mark svg { width: 23px; height: 23px; display: block; }
+  .chip .mark img, .modal-art img, .ph-prev img {
+    width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block;
+  }
+  .chip.sm { font-size: 14.5px; padding: 4px 10px 4px 5px; }
+  .chip.sm .mark { width: 22px; height: 22px; font-size: 13px; }
+  .chip.sm .mark svg { width: 19px; height: 19px; }
+
+  /* 봉투 */
+  .env-stage { position: relative; height: 258px; perspective: 1000px; display: flex; align-items: flex-end; justify-content: center; }
+  .env { position: relative; width: 100%; max-width: 330px; height: 210px; transform-style: preserve-3d; cursor: pointer; }
+  .env-back { position: absolute; inset: 0; border-radius: 10px; background: var(--env-2); }
+  .env-card {
+    position: absolute; left: 6%; right: 6%; bottom: 10px; top: 20px;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px 7px 11px 8px; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; padding: 12px;
+    transition: transform .55s cubic-bezier(.22,.9,.3,1);
+  }
+  .env.open .env-card { transform: translateY(-62%); z-index: 4; }
+  .env-card .lbl { font-size: 14px; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+  .env-card .who {
+    font-family: var(--f-display); font-size: clamp(33px, 10.4vw, 43px);
+    font-weight: 400; line-height: 1.18; letter-spacing: .01em;
+  }
+  .env-front {
+    position: absolute; inset: 0; z-index: 2; border-radius: 10px;
+    background: linear-gradient(170deg, var(--env-2), var(--env));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+  }
+  .env-front::after {
+    content: ""; position: absolute; inset: 0; border-radius: 10px;
+    background:
+      linear-gradient(to bottom right, transparent calc(50% - 1px), rgba(255,255,255,.06) 50%, transparent calc(50% + 1px)),
+      linear-gradient(to bottom left, transparent calc(50% - 1px), rgba(255,255,255,.06) 50%, transparent calc(50% + 1px));
+  }
+  .env-flap {
+    position: absolute; left: 0; right: 0; top: 0; height: 58%;
+    z-index: 3; transform-origin: top center;
+    background: linear-gradient(185deg, var(--env-2), var(--env));
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transition: transform .55s cubic-bezier(.4,.1,.3,1);
+    backface-visibility: hidden;
+  }
+  .env.open .env-flap { transform: rotateX(179deg); z-index: 0; }
+  .seal {
+    position: absolute; left: 50%; top: 42%; z-index: 5;
+    width: 48px; height: 48px; margin-left: -24px; border-radius: 50%;
+    background: var(--accent); color: var(--on-accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--f-display); font-size: 17px; font-weight: 400;
+    box-shadow: 0 3px 10px rgba(0,0,0,.32);
+    transition: opacity .25s ease, transform .35s ease;
+  }
+  .env.open .seal { opacity: 0; transform: scale(.6); }
+  /* 봉투(어두운 면) 위에 얹히는 글씨라 테마와 무관하게 밝은 색을 고정한다 */
+  .env-hint {
+    position: absolute; left: 0; right: 0; bottom: 12px; z-index: 6;
+    text-align: center; font-size: 14.5px; color: rgba(243, 238, 252, .85); font-weight: 700;
+  }
+
+  .detail { display: flex; flex-direction: column; gap: 12px; }
+  .detail .block {
+    display: flex; flex-direction: column; gap: 6px;
+    padding: 13px 14px; border-radius: 14px 11px 15px 12px;
+    background: var(--surface-2); border: 1.5px solid var(--line);
+  }
+  .detail .block .k { font-size: 14px; letter-spacing: .06em; font-weight: 700; color: var(--muted); }
+  .detail .block .note { font-size: 14px; color: var(--muted); }
+
+  /* 공개 체인 */
+  .chain { display: flex; flex-direction: column; }
+  .link { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+  .link .rail { display: flex; flex-direction: column; align-items: center; width: 20px; }
+  .link .bead { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); margin-top: 8px; flex: none; }
+  .link .wire { width: 2px; flex: 1; background: var(--line); min-height: 30px; }
+  .link:last-child .wire { background: repeating-linear-gradient(var(--line) 0 4px, transparent 4px 8px); }
+  .link .txt { padding-bottom: 16px; display: flex; flex-direction: column; gap: 5px; }
+  .link .g { font-family: var(--f-display); font-size: 20px; font-weight: 400; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .link .r { font-size: 15px; color: var(--muted); }
+  .link .r b { color: var(--fg); font-weight: 700; }
+
+  /* 진행자: 링크 목록 */
+  .links { display: flex; flex-direction: column; gap: 9px; }
+  .lrow {
+    display: flex; align-items: center; gap: 11px;
+    padding: 11px 12px; border-radius: 13px 10px 14px 11px;
+    background: var(--surface-2); border: 1.5px solid var(--line);
+  }
+  .lrow.done { border-color: var(--ok); background: transparent; }
+  .lrow input[type="checkbox"] { width: 22px; height: 22px; flex: none; accent-color: var(--ok); margin: 0; }
+  .lrow .nm { flex: 1; min-width: 0; font-size: 17px; font-weight: 700; }
+  .lrow.done .nm { color: var(--muted); text-decoration: line-through; }
+  .lrow button { font-size: 14.5px; padding: 7px 12px; flex: none; }
+
+  /* 진행자: 사진 등록 */
+  .ph-list { display: flex; flex-direction: column; gap: 9px; }
+  .ph-row { display: flex; align-items: center; gap: 10px; }
+  .ph-prev {
+    width: 42px; height: 42px; border-radius: 50%; flex: none; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--prev-bg, #E6E2EE); border: 1px solid var(--line);
+  }
+  .ph-prev svg { width: 36px; height: 36px; display: block; }
+  .ph-row .nm { flex: 1; min-width: 0; font-size: 16.5px; font-weight: 700; }
+  .ph-row button { font-size: 14.5px; padding: 7px 11px; }
+
+  .notice {
+    font-size: 14.5px; color: var(--muted);
+    background: var(--surface-2); border: 1.5px dashed var(--line);
+    border-radius: 13px 10px 14px 11px; padding: 12px 14px;
+  }
+  .notice b { color: var(--fg); }
+  .warn { border-color: var(--rose); color: var(--fg); }
+  .err { color: var(--rose); font-size: 15px; font-weight: 700; }
+  .ok { color: var(--ok); font-size: 15px; font-weight: 700; }
+  .count { font-family: var(--f-display); font-size: 27px; font-weight: 400; }
+  .count span { font-family: var(--f-body); font-size: 15px; font-weight: 700; color: var(--muted); }
+  .cast { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  footer { font-size: 14px; color: var(--muted); text-align: center; }
+
+  /* 캐릭터 발표 팝업 */
+  .modal {
+    position: fixed; inset: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(11, 8, 18, .66);
+    padding-left: max(18px, env(safe-area-inset-left, 0px));
+    padding-right: max(18px, env(safe-area-inset-right, 0px));
+    padding-top: max(18px, env(safe-area-inset-top, 0px));
+    padding-bottom: max(18px, env(safe-area-inset-bottom, 0px));
+  }
+  .modal-card {
+    width: 100%; max-width: 332px;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 26px 20px 28px 22px; padding: 26px 22px 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    text-align: center;
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .6);
+    animation: pop .32s cubic-bezier(.2,.9,.3,1.1);
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(14px) scale(.94); }
+    to { opacity: 1; transform: none; }
+  }
+  .modal-art {
+    width: 108px; height: 108px; border-radius: 50%; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--art-bg, #E6E2EE); color: var(--chip-fg);
+    border: 1px solid rgba(0, 0, 0, .09);
+  }
+  .modal-art svg { width: 86px; height: 86px; display: block; }
+  .modal-card h3 {
+    margin: 0; font-family: var(--f-display); font-weight: 400;
+    font-size: 27px; line-height: 1.3; letter-spacing: .01em; text-wrap: balance;
+  }
+  .modal-card h3 em { font-style: normal; color: var(--accent); }
+  .modal-note {
+    margin: 0; font-size: 15.5px; font-weight: 700; color: var(--fg);
+    background: var(--accent-soft); border-radius: 12px 9px 13px 10px; padding: 10px 12px;
+    width: 100%;
+  }
+  .modal-sub { margin: 0; font-size: 14.5px; color: var(--muted); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .env-card, .env-flap, .seal, button { transition: none !important; }
+    .modal-card { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">팀 이벤트</div>
+    <h1>하찮은 마니또</h1>
+    <p class="sub" id="sub">이름을 넣고 한 번 돌리면 각자에게 보낼 링크가 만들어집니다. 받은 사람은 자기 링크에서 자기 마니또만 볼 수 있습니다.</p>
+  </header>
+
+  <!-- 진행자: 이름 입력 -->
+  <section class="card" id="v-setup">
+    <h2>참가자 이름</h2>
+    <p>한 줄에 한 명씩 적어 주세요. 3명부터 8명까지 됩니다.</p>
+    <textarea id="names" spellcheck="false" aria-label="참가자 이름"></textarea>
+    <button class="primary wide" id="btn-draw">추첨하고 링크 만들기</button>
+    <p class="err" id="setup-err" hidden></p>
+    <div class="notice">돌리고 나면 사람마다 링크가 하나씩 나옵니다. 그 링크를 당사자에게만 따로 보내 주세요.</div>
+  </section>
+
+  <!-- 진행자: 링크 목록 -->
+  <section class="card" id="v-links" hidden>
+    <h2>각자에게 보낼 링크</h2>
+    <div class="count"><span id="sent-count">0 / 0</span> <span>명에게 전달</span></div>
+    <p>링크를 복사해 그 사람에게 1:1로 보내고, 보낸 사람은 왼쪽 네모를 눌러 체크해 두세요.</p>
+    <div class="links" id="links"></div>
+    <div class="notice warn"><b>링크를 눌러보지 마세요.</b> 열면 그 사람 마니또가 보입니다. 진행자 본인 링크만 여세요.</div>
+
+    <h3>다 같이 열 공개 링크</h3>
+    <p>선물 교환이 끝나고 한자리에 모였을 때 이 링크를 띄우면 전체 고리가 공개됩니다. 그때까지 아무에게도 보내지 마세요.</p>
+    <div class="links" id="links-all"></div>
+
+    <div class="notice">이 목록은 이 기기에 저장돼 있어서, 창을 닫았다 열어도 그대로 남아 있습니다.</div>
+    <button class="ghost wide danger" id="btn-again">처음부터 다시 뽑기</button>
+  </section>
+
+  <!-- 진행자: 캐릭터 사진 -->
+  <section class="card" id="v-photos">
+    <h2>캐릭터 사진</h2>
+    <p>캐릭터마다 사진을 올리면 기본 그림 대신 그 사진이 쓰입니다. 정사각형으로 잘려 들어가고, 올리는 순간 224px로 줄여 저장합니다.</p>
+    <div class="ph-list" id="ph-list"></div>
+    <p class="err" id="ph-err" hidden></p>
+    <p class="ok" id="ph-ok" hidden></p>
+    <div class="notice warn"><b>사진은 아직 이 기기에만 있습니다.</b> 팀원들에게도 보이게 하려면 아래 버튼으로 파일을 내려받아 GitHub에 다시 올려 주세요.</div>
+    <button class="primary wide" id="btn-export">사진 넣은 index.html 내려받기</button>
+  </section>
+
+  <!-- 참가자: 봉투 -->
+  <section class="card" id="v-envelope" hidden>
+    <h2 id="env-title">내 봉투</h2>
+    <p id="env-sub">주변에 사람이 없을 때 열어 주세요. 열고 20초가 지나면 저절로 닫힙니다.</p>
+    <div class="env-stage">
+      <div class="env" id="env">
+        <div class="env-back"></div>
+        <div class="env-card">
+          <div class="lbl">내가 선물할 사람</div>
+          <div class="who" id="who">· · ·</div>
+        </div>
+        <div class="env-front"></div>
+        <div class="env-flap"></div>
+        <div class="seal">밀당</div>
+        <div class="env-hint" id="env-hint">봉투를 누르면 열립니다</div>
+      </div>
+    </div>
+    <button class="primary wide" id="btn-open">봉투 열기</button>
+
+    <div class="detail">
+      <div class="block">
+        <span class="k">선물에 적을 내 이름</span>
+        <div id="mychar-slot"></div>
+        <span class="note">실명 대신 이 캐릭터 이름만 적어 주세요.</span>
+      </div>
+      <div class="block">
+        <span class="k">나에게 선물할 사람</span>
+        <div id="fromchar-slot"></div>
+        <span class="note">누구인지는 마지막 공개 때 밝혀집니다.</span>
+      </div>
+    </div>
+
+    <button class="ghost wide" id="btn-mychar">내 캐릭터 다시 보기</button>
+  </section>
+
+  <!-- 공개 -->
+  <section class="card" id="v-reveal" hidden>
+    <h2>마니또 고리</h2>
+    <p>화살표를 따라가면 하나의 고리로 이어집니다. 왼쪽이 선물을 준 사람, 옆이 그 사람이 맡았던 캐릭터입니다.</p>
+    <div class="chain" id="chain"></div>
+  </section>
+
+  <!-- 잘못된 링크 -->
+  <section class="card" id="v-bad" hidden>
+    <h2>링크를 읽을 수 없습니다</h2>
+    <p>주소가 중간에 잘렸을 수 있습니다. 진행자에게 링크를 다시 받아 주세요.</p>
+  </section>
+
+  <section class="card" id="v-cast">
+    <h2>등장 캐릭터 여덟</h2>
+    <p>추첨할 때 한 명에 하나씩, 겹치지 않게 배정됩니다.</p>
+    <div class="cast" id="cast"></div>
+  </section>
+
+  <footer>하찮은 마니또 · 사내 이벤트용 페이지</footer>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-art" id="modal-art"></div>
+    <h3 id="modal-title"></h3>
+    <p class="modal-note">캐릭터는 마니또 당일까지 비밀 유지 필수</p>
+    <p class="modal-sub" id="modal-sub"></p>
+    <button class="primary wide" id="modal-close">확인했어요</button>
+  </div>
+</div>
+
+<input type="file" id="ph-file" accept="image/*" hidden>
+
+<script>
+(function () {
+  "use strict";
+
+  var DEFAULT_NAMES = ["김민철", "김새미", "김유정", "노경무", "조하영", "정희승", "허유나", "정재현"];
+
+  // 진행자가 올린 사진이 여기 담긴다. 아래 한 줄은 "내려받기"가 통째로 갈아끼우므로 형태를 바꾸지 말 것.
+  var PHOTOS = {}; /*PHOTOS_END*/
+
+  // 이 페이지를 위해 그린 오리지널 마스코트 여덟. 48x48 격자, 공통 잉크색 #3A2F45.
+  var SVG = function (inner) {
+    return '<svg viewBox="0 0 48 48" aria-hidden="true">' +
+      '<g stroke="#3A2F45" stroke-width="2.2" stroke-linejoin="round">' + inner + '</g></svg>';
+  };
+  var CHARS = [
+    { slug: "chiikawa", name: "치이카와", bg: "#FBE3E6",
+      svg: SVG('<path d="M15 16 11 5l10 6z" fill="#FFF4F1"/><path d="M33 16 37 5l-10 6z" fill="#FFF4F1"/>' +
+        '<circle cx="24" cy="28" r="15" fill="#FFF4F1"/>' +
+        '<circle cx="19" cy="26" r="2.3" fill="#3A2F45" stroke="none"/><circle cx="29" cy="26" r="2.3" fill="#3A2F45" stroke="none"/>' +
+        '<path d="M21.5 32q2.5 2.5 5 0" fill="none" stroke-linecap="round"/>') },
+    { slug: "hachiware", name: "하치와레", bg: "#DCEAF8",
+      svg: SVG('<path d="M12 17 13 5l9 7z" fill="#8FB6D6"/><path d="M36 17 35 5l-9 7z" fill="#8FB6D6"/>' +
+        '<circle cx="24" cy="28" r="15" fill="#FFFFFF"/>' +
+        '<path d="M9.9 23a15 15 0 0 1 28.2 0z" fill="#8FB6D6" stroke="none"/>' +
+        '<circle cx="24" cy="28" r="15" fill="none"/>' +
+        '<circle cx="19" cy="27" r="2.3" fill="#3A2F45" stroke="none"/><circle cx="29" cy="27" r="2.3" fill="#3A2F45" stroke="none"/>' +
+        '<path d="M21.5 33q2.5 2.5 5 0" fill="none" stroke-linecap="round"/>') },
+    { slug: "shisa", name: "시사", bg: "#FCE8C6",
+      svg: SVG('<g fill="#E8863F"><circle cx="24" cy="8" r="5"/><circle cx="35.3" cy="12.7" r="5"/><circle cx="40" cy="24" r="5"/>' +
+        '<circle cx="35.3" cy="35.3" r="5"/><circle cx="24" cy="40" r="5"/><circle cx="12.7" cy="35.3" r="5"/>' +
+        '<circle cx="8" cy="24" r="5"/><circle cx="12.7" cy="12.7" r="5"/></g>' +
+        '<circle cx="24" cy="24" r="13" fill="#FFF6E6"/>' +
+        '<circle cx="19.5" cy="22" r="2.3" fill="#3A2F45" stroke="none"/><circle cx="28.5" cy="22" r="2.3" fill="#3A2F45" stroke="none"/>' +
+        '<path d="M21.5 28q2.5 2.5 5 0" fill="none" stroke-linecap="round"/>') },
+    { slug: "rakko", name: "랏코", bg: "#EAE4D6",
+      svg: SVG('<circle cx="14" cy="13" r="4.5" fill="#F3EADC"/><circle cx="34" cy="13" r="4.5" fill="#F3EADC"/>' +
+        '<ellipse cx="24" cy="26" rx="14" ry="16" fill="#F3EADC"/>' +
+        '<circle cx="19" cy="22" r="2.3" fill="#3A2F45" stroke="none"/><circle cx="29" cy="22" r="2.3" fill="#3A2F45" stroke="none"/>' +
+        '<path d="M21.5 28q2.5 2.5 5 0" fill="none" stroke-linecap="round"/>' +
+        '<path d="M10.5 33h27v5.5h-27z" fill="#FFFFFF"/>') },
+    { slug: "momonga", name: "모몽가", bg: "#DFEFF3",
+      svg: SVG('<path d="M30 11c10 2 16 10 14 20-2 9-10 12-14 8z" fill="#BBDCEE"/>' +
+        '<circle cx="12" cy="15" r="5" fill="#FFFFFF"/><circle cx="28" cy="15" r="5" fill="#FFFFFF"/>' +
+        '<circle cx="20" cy="28" r="14" fill="#FFFFFF"/>' +
+        '<circle cx="15.5" cy="26" r="2.3" fill="#3A2F45" stroke="none"/><circle cx="24.5" cy="26" r="2.3" fill="#3A2F45" stroke="none"/>' +
+        '<path d="M17.5 32q2.5 2.5 5 0" fill="none" stroke-linecap="round"/>') },
+    { slug: "usagi", name: "우사기", bg: "#FAF0C4",
+      svg: SVG('<rect x="15" y="3" width="7" height="20" rx="3.5" fill="#FFF8DC"/>' +
+        '<rect x="26" y="3" width="7" height="20" rx="3.5" fill="#FFF8DC"/>' +
+        '<rect x="17.4" y="6.5" width="2.2" height="13" rx="1.1" fill="#F7C0CE" stroke="none"/>' +
+        '<rect x="28.4" y="6.5" width="2.2" height="13" rx="1.1" fill="#F7C0CE" stroke="none"/>' +
+        '<circle cx="24" cy="31" r="14" fill="#FFF8DC"/>' +
+        '<circle cx="19.5" cy="29" r="2.3" fill="#3A2F45" stroke="none"/><circle cx="28.5" cy="29" r="2.3" fill="#3A2F45" stroke="none"/>' +
+        '<path d="M21.5 35q2.5 2.5 5 0" fill="none" stroke-linecap="round"/>') },
+    { slug: "kurimanju", name: "쿠리만쥬", bg: "#E7DAC6",
+      svg: SVG('<path d="M24 5c10 7 16 15 16 23 0 8-7 14-16 14S8 36 8 28c0-8 6-16 16-23Z" fill="#F6E3C4"/>' +
+        '<path d="M24 5c6.6 4.6 11.4 9.7 14 15H10c2.6-5.3 7.4-10.4 14-15Z" fill="#8A5A3B"/>' +
+        '<circle cx="19" cy="29" r="2.3" fill="#3A2F45" stroke="none"/><circle cx="29" cy="29" r="2.3" fill="#3A2F45" stroke="none"/>' +
+        '<path d="M21.5 35q2.5 2.5 5 0" fill="none" stroke-linecap="round"/>') },
+    { slug: "kani", name: "카니", bg: "#F8DBE8",
+      svg: SVG('<path d="M15 19v-7M33 19v-7" fill="none" stroke-linecap="round"/>' +
+        '<circle cx="15" cy="9" r="3.6" fill="#FFFFFF"/><circle cx="33" cy="9" r="3.6" fill="#FFFFFF"/>' +
+        '<circle cx="15" cy="9" r="1.4" fill="#3A2F45" stroke="none"/><circle cx="33" cy="9" r="1.4" fill="#3A2F45" stroke="none"/>' +
+        '<circle cx="7" cy="27" r="6" fill="#E8698F"/><circle cx="41" cy="27" r="6" fill="#E8698F"/>' +
+        '<ellipse cx="24" cy="30" rx="14" ry="11" fill="#FFB7CC"/>' +
+        '<path d="M19.5 31q4.5 4 9 0" fill="none" stroke-linecap="round"/>') }
+  ];
+  var CHAR_BY_SLUG = {};
+  CHARS.forEach(function (c) { CHAR_BY_SLUG[c.slug] = c; });
+
+  var AUTO_HIDE_MS = 20000;
+  var PHOTO_KEY = "manito-photos-v1";
+  var HOST_KEY = "manito-host-v1";
+  var PHOTO_PX = 224;
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  var me = null;                 // 참가자 화면 데이터
+  var host = null;               // { rows, all, sent }
+  var envOpen = false, envTimer = null, envTick = null, envLeft = 0;
+  var modalOpen = false, photoTarget = "", busy = false, againArmed = false;
+
+  // ---- 이 기기에만 남는 저장 ----
+  function loadLocal(key) {
+    try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; }
+  }
+  function saveLocal(key, val) {
+    try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch (e) { return false; }
+  }
+
+  // ---- 무작위 ----
+  function randInt(n) {
+    var max = Math.floor(0xFFFFFFFF / n) * n, buf = new Uint32Array(1), v;
+    do { crypto.getRandomValues(buf); v = buf[0]; } while (v >= max);
+    return v % n;
+  }
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = randInt(i + 1), t = arr[i];
+      arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  // ---- 주소에 담는 암호문(서버가 없으므로 결과를 링크 자체에 싣는다) ----
+  function encode(obj) {
+    var bytes = new TextEncoder().encode(JSON.stringify(obj));
+    var bin = "";
+    for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function decode(str) {
+    var s = str.replace(/-/g, "+").replace(/_/g, "/");
+    while (s.length % 4) s += "=";
+    var bin = atob(s);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return JSON.parse(new TextDecoder().decode(bytes));
+  }
+  function baseUrl() { return location.origin + location.pathname; }
+
+  // ---- 캐릭터 그리기 ----
+  function charOf(slug) { return CHAR_BY_SLUG[slug] || null; }
+  function paintInto(el, c) {
+    el.textContent = "";
+    var photo = c && c.slug && PHOTOS[c.slug];
+    if (photo) {
+      var im = document.createElement("img");
+      im.src = photo; im.alt = "";
+      el.appendChild(im);
+    } else if (c && c.svg) {
+      el.innerHTML = c.svg;
+    } else {
+      el.textContent = "?";
+    }
+  }
+  function chipEl(slug, small) {
+    var c = charOf(slug);
+    var el = document.createElement("span");
+    el.className = "chip" + (small ? " sm" : "");
+    el.style.setProperty("--chip-bg", c ? c.bg : "#E6E2EE");
+    var m = document.createElement("span");
+    m.className = "mark";
+    paintInto(m, c);
+    var t = document.createElement("span");
+    t.textContent = c ? c.name : "알 수 없음";
+    el.appendChild(m); el.appendChild(t);
+    return el;
+  }
+  function putChip(slotId, slug) {
+    var slot = $(slotId);
+    slot.textContent = "";
+    if (slug && charOf(slug)) { slot.appendChild(chipEl(slug, false)); return; }
+    var q = document.createElement("span");
+    q.className = "chip";
+    q.style.setProperty("--chip-bg", "#E6E2EE");
+    var m = document.createElement("span");
+    m.className = "mark"; m.textContent = "?";
+    var t = document.createElement("span");
+    t.textContent = "봉투를 열면 보입니다";
+    q.appendChild(m); q.appendChild(t);
+    slot.appendChild(q);
+  }
+
+  // ---- 캐릭터 발표 팝업 ----
+  function openModal(slug, personName, firstTime) {
+    var c = charOf(slug);
+    if (!c) return;
+    var stage = $("modal-art");
+    stage.style.setProperty("--art-bg", c.bg);
+    paintInto(stage, c);
+
+    var h = $("modal-title");
+    h.textContent = "";
+    h.appendChild(document.createTextNode((personName || "회원") + "님은 "));
+    var em = document.createElement("em");
+    em.textContent = c.name;
+    h.appendChild(em);
+    h.appendChild(document.createTextNode(" 입니다!"));
+
+    $("modal-sub").textContent = firstTime
+      ? "선물에는 실명 대신 이 이름만 적어 주세요."
+      : "선물에 적을 이름입니다. 당일까지 아무에게도 말하지 마세요.";
+
+    modalOpen = true;
+    $("modal").hidden = false;
+    document.body.classList.add("locked");
+    $("modal-close").focus();
+  }
+  function closeModal() {
+    modalOpen = false;
+    $("modal").hidden = true;
+    document.body.classList.remove("locked");
+  }
+
+  // ---- 진행자: 추첨 ----
+  function readNames() {
+    var raw = ($("names").value || "").split(/\r?\n/);
+    var out = [], seen = {};
+    raw.forEach(function (line) {
+      var nm = line.replace(/\s+/g, "");
+      if (!nm || seen[nm]) return;
+      seen[nm] = true;
+      out.push(nm);
+    });
+    return out;
+  }
+  function setupErr(t) { var el = $("setup-err"); el.textContent = t || ""; el.hidden = !t; }
+
+  function draw() {
+    var names = readNames();
+    if (names.length < 3) { setupErr("3명 이상 적어 주세요."); return; }
+    if (names.length > CHARS.length) { setupErr("캐릭터가 여덟이라 8명까지만 됩니다."); return; }
+    setupErr("");
+
+    var ring = shuffle(names.slice());
+    var deck = shuffle(CHARS.map(function (c) { return c.slug; })).slice(0, ring.length);
+
+    var rows = [], all = [];
+    ring.forEach(function (giver, i) {
+      var recv = ring[(i + 1) % ring.length];
+      var prev = (i - 1 + ring.length) % ring.length;
+      rows.push({
+        name: giver,
+        url: baseUrl() + "#p=" + encode({ n: giver, c: deck[i], g: recv, f: deck[prev] })
+      });
+      all.push([giver, deck[i], recv]);
+    });
+    // 링크 목록을 입력 순서로 되돌려, 줄 순서에서 고리를 읽을 수 없게 한다
+    rows.sort(function (a, b) { return names.indexOf(a.name) - names.indexOf(b.name); });
+
+    host = { rows: rows, all: baseUrl() + "#a=" + encode(all), sent: {} };
+    saveLocal(HOST_KEY, host);
+    showHostLinks();
+  }
+
+  function showHostLinks() {
+    renderLinks();
+    $("v-setup").hidden = true;
+    $("v-links").hidden = false;
+    $("v-cast").hidden = true;
+    window.scrollTo(0, 0);
+  }
+
+  function copyText(url, btn, label) {
+    var done = function () {
+      btn.textContent = "복사됨";
+      setTimeout(function () { btn.textContent = label; }, 2200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done, function () { fallbackCopy(url, done); });
+    } else {
+      fallbackCopy(url, done);
+    }
+  }
+  function fallbackCopy(text, done) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) { window.prompt("이 주소를 복사하세요", text); }
+    document.body.removeChild(ta);
+  }
+
+  function renderLinks() {
+    if (!host) return;
+    var box = $("links");
+    box.textContent = "";
+    var sentCount = 0;
+
+    host.rows.forEach(function (r) {
+      var on = !!host.sent[r.name];
+      if (on) sentCount++;
+      var row = document.createElement("div");
+      row.className = "lrow" + (on ? " done" : "");
+
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = on;
+      cb.id = "sent-" + r.name;
+      cb.setAttribute("aria-label", r.name + " 전달 완료");
+      cb.onchange = function () {
+        host.sent[r.name] = cb.checked;
+        if (!cb.checked) delete host.sent[r.name];
+        saveLocal(HOST_KEY, host);
+        renderLinks();
+      };
+
+      var nm = document.createElement("label");
+      nm.className = "nm";
+      nm.setAttribute("for", cb.id);
+      nm.textContent = r.name;
+
+      var b = document.createElement("button");
+      b.textContent = "링크 복사";
+      b.onclick = function () { copyText(r.url, b, "링크 복사"); };
+
+      row.appendChild(cb); row.appendChild(nm); row.appendChild(b);
+      box.appendChild(row);
+    });
+
+    $("sent-count").textContent = sentCount + " / " + host.rows.length;
+
+    var allBox = $("links-all");
+    allBox.textContent = "";
+    var arow = document.createElement("div");
+    arow.className = "lrow";
+    var anm = document.createElement("span");
+    anm.className = "nm"; anm.textContent = "전체 공개";
+    var ab = document.createElement("button");
+    ab.textContent = "링크 복사";
+    ab.onclick = function () { copyText(host.all, ab, "링크 복사"); };
+    arow.appendChild(anm); arow.appendChild(ab);
+    allBox.appendChild(arow);
+  }
+
+  // ---- 진행자: 캐릭터 사진 ----
+  function photoErr(t) { var el = $("ph-err"); el.textContent = t || ""; el.hidden = !t; }
+  function photoOk(t) { var el = $("ph-ok"); el.textContent = t || ""; el.hidden = !t; }
+
+  function renderPhotos() {
+    var box = $("ph-list");
+    box.textContent = "";
+    CHARS.forEach(function (c) {
+      var row = document.createElement("div");
+      row.className = "ph-row";
+
+      var prev = document.createElement("span");
+      prev.className = "ph-prev";
+      prev.style.setProperty("--prev-bg", c.bg);
+      paintInto(prev, c);
+
+      var nm = document.createElement("span");
+      nm.className = "nm"; nm.textContent = c.name;
+
+      var up = document.createElement("button");
+      up.textContent = PHOTOS[c.slug] ? "바꾸기" : "사진 올리기";
+      up.disabled = busy;
+      up.onclick = function () { pickPhoto(c.slug); };
+
+      row.appendChild(prev); row.appendChild(nm); row.appendChild(up);
+
+      if (PHOTOS[c.slug]) {
+        var rm = document.createElement("button");
+        rm.className = "ghost danger";
+        rm.textContent = "지우기";
+        rm.disabled = busy;
+        rm.onclick = function () { removePhoto(c.slug); };
+        row.appendChild(rm);
+      }
+      box.appendChild(row);
+    });
+  }
+
+  function pickPhoto(slug) {
+    if (busy) return;
+    photoTarget = slug;
+    photoErr(""); photoOk("");
+    var f = $("ph-file");
+    f.value = "";
+    f.click();
+  }
+
+  function squareDataUrl(file, size) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var c = document.createElement("canvas");
+          c.width = size; c.height = size;
+          var ctx = c.getContext("2d");
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fillRect(0, 0, size, size);
+          var s = Math.min(img.width, img.height);
+          ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
+          URL.revokeObjectURL(url);
+          resolve(c.toDataURL("image/jpeg", 0.82));
+        } catch (e) { URL.revokeObjectURL(url); reject(e); }
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error("bad image")); };
+      img.src = url;
+    });
+  }
+
+  function onPhotoChosen() {
+    var input = $("ph-file");
+    var file = input.files && input.files[0];
+    var slug = photoTarget;
+    photoTarget = "";
+    if (!file || !slug) return;
+    if (!/^image\//.test(file.type)) { photoErr("이미지 파일만 올릴 수 있습니다."); return; }
+
+    busy = true; renderPhotos();
+    squareDataUrl(file, PHOTO_PX).then(function (dataUrl) {
+      PHOTOS[slug] = dataUrl;
+      if (!saveLocal(PHOTO_KEY, PHOTOS)) {
+        photoErr("이 기기에 저장하지 못했습니다. 사진이 너무 많거나 저장 공간이 찼습니다.");
+      } else {
+        photoOk("올렸습니다. 팀원들에게도 보이려면 아래에서 파일을 내려받아 다시 올려 주세요.");
+      }
+      busy = false;
+      renderPhotos(); renderCast();
+    }).catch(function () {
+      busy = false;
+      photoErr("사진을 읽지 못했습니다. 다른 파일로 시도해 주세요.");
+      renderPhotos();
+    });
+  }
+
+  function removePhoto(slug) {
+    if (busy) return;
+    delete PHOTOS[slug];
+    saveLocal(PHOTO_KEY, PHOTOS);
+    photoErr(""); photoOk("");
+    renderPhotos(); renderCast();
+  }
+
+  // 지금 PHOTOS를 그대로 박아 넣은 새 index.html을 만들어 내려준다
+  function exportFile() {
+    var marker = /var PHOTOS = \{[\s\S]*?\}; \/\*PHOTOS_END\*\//;
+    var payload = "var PHOTOS = " + JSON.stringify(PHOTOS) + "; /*PHOTOS_END*/";
+
+    var finish = function (html) {
+      if (!marker.test(html)) {
+        photoErr("파일에서 사진이 들어갈 자리를 찾지 못했습니다.");
+        return;
+      }
+      var out = html.replace(marker, function () { return payload; });
+      var blob = new Blob([out], { type: "text/html;charset=utf-8" });
+      var href = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = href;
+      a.download = "index.html";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(href); }, 1500);
+      photoErr("");
+      photoOk("내려받았습니다. 이 파일을 GitHub의 index.html 자리에 덮어쓰면 모두에게 보입니다.");
+    };
+
+    fetch(baseUrl(), { cache: "no-store" })
+      .then(function (r) { if (!r.ok) { throw new Error("no"); } return r.text(); })
+      .then(finish)
+      .catch(function () { finish("<!doctype html>\n" + document.documentElement.outerHTML); });
+  }
+
+  // ---- 참가자: 봉투 ----
+  function clearTimers() {
+    if (envTimer) { clearTimeout(envTimer); envTimer = null; }
+    if (envTick) { clearInterval(envTick); envTick = null; }
+  }
+  function renderEnvelope() {
+    if (!me) return;
+    $("env-title").textContent = me.n + " 님의 봉투";
+    $("who").textContent = envOpen ? me.g : "· · ·";
+    $("env").classList.toggle("open", envOpen);
+    $("btn-open").textContent = envOpen ? "지금 닫기" : "봉투 열기";
+    $("env-hint").textContent = envOpen ? "" : "봉투를 누르면 열립니다";
+    putChip("mychar-slot", envOpen ? me.c : null);
+    putChip("fromchar-slot", envOpen ? me.f : null);
+  }
+  function toggleEnvelope() {
+    if (!me || modalOpen) return;
+    envOpen = !envOpen;
+    clearTimers();
+    if (envOpen) {
+      envLeft = Math.round(AUTO_HIDE_MS / 1000);
+      $("env-sub").textContent = envLeft + "초 뒤에 저절로 닫힙니다.";
+      envTick = setInterval(function () {
+        envLeft--;
+        if (envLeft > 0 && envOpen) $("env-sub").textContent = envLeft + "초 뒤에 저절로 닫힙니다.";
+      }, 1000);
+      envTimer = setTimeout(function () {
+        envOpen = false; clearTimers();
+        $("env-sub").textContent = "닫혔습니다. 다시 열 수 있습니다.";
+        renderEnvelope();
+      }, AUTO_HIDE_MS);
+    } else {
+      $("env-sub").textContent = "주변에 사람이 없을 때 열어 주세요. 열고 20초가 지나면 저절로 닫힙니다.";
+    }
+    renderEnvelope();
+  }
+
+  // ---- 공개 ----
+  function renderReveal(all) {
+    var box = $("chain");
+    box.textContent = "";
+    var next = {}, seen = {}, out = [];
+    all.forEach(function (p) { next[p[0]] = p; });
+    var cur = all[0] && all[0][0];
+    while (cur && next[cur] && !seen[cur]) {
+      seen[cur] = true;
+      out.push(next[cur]);
+      cur = next[cur][2];
+    }
+    all.forEach(function (p) { if (!seen[p[0]]) { seen[p[0]] = true; out.push(p); } });
+
+    out.forEach(function (p) {
+      var row = document.createElement("div"); row.className = "link";
+      var rail = document.createElement("div"); rail.className = "rail";
+      var bead = document.createElement("span"); bead.className = "bead";
+      var wire = document.createElement("span"); wire.className = "wire";
+      rail.appendChild(bead); rail.appendChild(wire);
+
+      var txt = document.createElement("div"); txt.className = "txt";
+      var g = document.createElement("div"); g.className = "g";
+      var gn = document.createElement("span"); gn.textContent = p[0];
+      g.appendChild(gn);
+      if (charOf(p[1])) g.appendChild(chipEl(p[1], true));
+      var r = document.createElement("div"); r.className = "r";
+      r.appendChild(document.createTextNode("→ "));
+      var b = document.createElement("b"); b.textContent = p[2];
+      r.appendChild(b);
+      r.appendChild(document.createTextNode(" 에게 선물"));
+      txt.appendChild(g); txt.appendChild(r);
+
+      row.appendChild(rail); row.appendChild(txt);
+      box.appendChild(row);
+    });
+  }
+
+  function renderCast() {
+    var box = $("cast");
+    box.textContent = "";
+    CHARS.forEach(function (c) { box.appendChild(chipEl(c.slug, true)); });
+  }
+
+  // ---- 시작 ----
+  function boot() {
+    var saved = loadLocal(PHOTO_KEY);
+    if (saved) {
+      Object.keys(saved).forEach(function (k) { if (saved[k]) PHOTOS[k] = saved[k]; });
+    }
+    renderCast();
+    $("names").value = DEFAULT_NAMES.join("\n");
+
+    var hash = location.hash.replace(/^#/, "");
+    var eq = hash.indexOf("=");
+    var key = eq > 0 ? hash.slice(0, eq) : "";
+    var val = eq > 0 ? hash.slice(eq + 1) : "";
+
+    if (key === "p") {
+      var data = null;
+      try { data = decode(val); } catch (e) { data = null; }
+      $("v-setup").hidden = true;
+      $("v-photos").hidden = true;
+      if (!data || !data.n || !data.g) {
+        $("v-cast").hidden = true; $("v-bad").hidden = false;
+        return;
+      }
+      me = data;
+      $("v-envelope").hidden = false;
+      $("sub").textContent = "내 캐릭터와 내가 선물할 사람이 이 봉투에 들어 있습니다. 당일까지 비밀로 해 주세요.";
+      renderEnvelope();
+      openModal(me.c, me.n, true);
+      return;
+    }
+
+    if (key === "a") {
+      var all = null;
+      try { all = decode(val); } catch (e) { all = null; }
+      $("v-setup").hidden = true;
+      $("v-photos").hidden = true;
+      $("v-cast").hidden = true;
+      if (!all || !all.length) { $("v-bad").hidden = false; return; }
+      $("v-reveal").hidden = false;
+      $("sub").textContent = "선물이 다 오갔습니다. 이제 누가 누구의 마니또였는지 밝힙니다.";
+      renderReveal(all);
+      return;
+    }
+
+    // 진행자 화면
+    renderPhotos();
+    host = loadLocal(HOST_KEY);
+    if (host && host.rows && host.rows.length) {
+      if (!host.sent) host.sent = {};
+      showHostLinks();
+    }
+  }
+
+  $("btn-draw").addEventListener("click", draw);
+  $("btn-again").addEventListener("click", function () {
+    if (!againArmed) {
+      againArmed = true;
+      $("btn-again").textContent = "링크가 모두 사라집니다 — 한 번 더";
+      setTimeout(function () {
+        againArmed = false;
+        $("btn-again").textContent = "처음부터 다시 뽑기";
+      }, 5000);
+      return;
+    }
+    againArmed = false;
+    $("btn-again").textContent = "처음부터 다시 뽑기";
+    host = null;
+    try { localStorage.removeItem(HOST_KEY); } catch (e) {}
+    $("v-links").hidden = true;
+    $("v-setup").hidden = false;
+    $("v-cast").hidden = false;
+    window.scrollTo(0, 0);
+  });
+  $("ph-file").addEventListener("change", onPhotoChosen);
+  $("btn-export").addEventListener("click", exportFile);
+  $("env").addEventListener("click", toggleEnvelope);
+  $("btn-open").addEventListener("click", toggleEnvelope);
+  $("btn-mychar").addEventListener("click", function () {
+    if (me) openModal(me.c, me.n, false);
+  });
+  $("modal-close").addEventListener("click", closeModal);
+  $("modal").addEventListener("click", function (e) { if (e.target === $("modal")) closeModal(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && modalOpen) closeModal();
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>
